@@ -21,10 +21,31 @@
         top:100px;
         left:900px;
       }
-      #stop{
+      #reset{
+        font-size: 40px;
+        border-radius: 100vh;
         position: absolute;
-        top:150px;
+        top:200px;
         left:900px;
+        justify-content: space-around;
+        align-items: center;
+        margin: auto;
+        max-width: 250px;
+        padding: 10px 25px;
+        color: #d9d7d7;
+        font-family: "Noto Sans Japanese";
+        text-decoration: none;
+        line-height: 1.8;
+        transition: 0.3s ease-in-out;
+        font-weight: 500;
+        background: #f28d29;
+        border-radius: 9999px;
+        border-bottom: solid 5px #999;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
+      }
+      #reset:hover{
+        border-bottom: solid 2px #999;
+        transform: translateY(3px);
       }
     </style>
   </head>
@@ -32,8 +53,14 @@
     <canvas id="myCanvas" width="800" height="500">
     </canvas>
     <h1 id="time">0</h1>
-    <h1 id="stop">0</h1>
+    <button id="reset" onclick="funconclick()">リセット</button>
     <script type="text/javascript">
+      function funconclick(){
+        location.reload();
+      }
+
+
+
       //座標及び変位の定義
       let x=500;
       let y=120;
@@ -42,6 +69,8 @@
       let xe=100;
       let ye=500;
       const canvas = document.getElementById("myCanvas");
+      //開始アラート
+      alert("青のボールを動かして、ボールを避け続けよう！");
 
       //ボールの定義
       const ctx = canvas.getContext("2d");
@@ -96,7 +125,6 @@ function checkMouseStop() {
         ctxdammy.fill();
         ctxdammy.closePath();
         timeoutId=false;
-        count++;
     }, 5);
 }
 
@@ -104,7 +132,6 @@ function checkMouseStop() {
 setInterval(() => {
   Time =new Date();
   document.getElementById("time").textContent="経過時間："+Math.floor((Time-startTime)/1000);
-  document.getElementById("stop").textContent="ストップボーナス："+Math.floor(count/20);
   if((Time-startTime)<=10000){
     x1=0;
     y1=0;
@@ -238,7 +265,7 @@ document.addEventListener("mousemove", mouseMove);
       function hit(){
         if((x-xe)*(x-xe)+(y-ye)*(y-ye)<=900||(x-x1)*(x-x1)+(y-y1)*(y-y1)<=900||(x-x2)*(x-x2)+(y-y2)*(y-y2)<=900||(x-x3)*(x-x3)+(y-y3)*(y-y3)<=1600||(x-x4)*(x-x4)+(y-y4)*(y-y4)<=1600){
            endTime = new Date();
-          alert(Math.floor((endTime-startTime)/1000));
+          alert("あなたの得点は："+Math.floor((endTime-startTime)/1000)+"点です！");
           clearInterval(interval);
         }
       }
