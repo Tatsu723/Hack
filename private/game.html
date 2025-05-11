@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>フォーム</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      canvas {
+        background: #eee;
+        display: block;
+        margin: 0 auto;
+        position: absolute;
+        top:0px;
+        left:0px;
+      }
+      #time{
+        position: absolute;
+        top:100px;
+        left:900px;
+      }
+      #stop{
+        position: absolute;
+        top:150px;
+        left:900px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="800" height="500">
+    </canvas>
+    <h1 id="time">0</h1>
+    <h1 id="stop">0</h1>
+    <script type="text/javascript">
+      //座標及び変位の定義
+      let x=500;
+      let y=120;
+      let dxe = 1;
+      let dye = -1;
+      let xe=100;
+      let ye=500;
+      const canvas = document.getElementById("myCanvas");
+
+      //ボールの定義
+      const ctx = canvas.getContext("2d");
+
+      //疑似ボールの定義
+      const ctxdammy = canvas.getContext("2d");
+
+
+      //敵の定義
+      const enemy = canvas.getContext("2d");
+
+      //時間変数
+      let startTime = new Date();
+      let Time;
+      let endTime;
+
+      //新たな敵の定義＋処理
+      const new1 = canvas.getContext("2d");
+      let x1=0;
+      let y1=0;
+      let dx1=2;
+      let dy1=-4;
+
+      const new2 = canvas.getContext("2d");
+      let x2=0;
+      let y2=0;
+      let dx2=3;
+      let dy2=-1;
+
+      const new3 = canvas.getContext("2d");
+      let x3=0;
+      let y3=0;
+      let dx3=3;
+      let dy3=-7;
+
+      const new4 = canvas.getContext("2d");
+      let x4=0;
+      let y4=0;
+      let dx4=9;
+      let dy4=1;
+
+      let count=0;
+      let timeoutId; // setTimeoutのIDを保存する変数
+
+function checkMouseStop() {
+    // マウスが動いたときにクリアするタイマーをセット
+    timeoutId = setTimeout(() => {
+        // マウスが止まっている状態の処理
+        ctxdammy.beginPath();
+        ctxdammy.arc(x, y,  20, 0, Math.PI * 2, false);
+        ctxdammy.fillStyle = "blue";
+        ctxdammy.fill();
+        ctxdammy.closePath();
+        timeoutId=false;
+        count++;
+    }, 5);
+}
+
+//時間処理
+setInterval(() => {
+  Time =new Date();
+  document.getElementById("time").textContent="経過時間："+Math.floor((Time-startTime)/1000);
+  document.getElementById("stop").textContent="ストップボーナス："+Math.floor(count/20);
+  if((Time-startTime)<=10000){
+    x1=0;
+    y1=0;
+    x2=0;
+    y2=0;
+    x3=0;
+    y3=0;
+    x4=0;
+    y4=0;
+  }else if ((Time-startTime)<=20000){
+    x2=0;
+    y2=0;
+    x3=0;
+    y3=0;
+    x4=0;
+    y4=0;
+  }else if ((Time-startTime)<=30000){
+    x3=0;
+    y3=0;
+    x4=0;
+    y4=0;
+  }else if ((Time-startTime)<=40000){
+    x4=0;
+    y4=0;
+  }
+}, 10);
+
+function mouseMove() {
+    if (timeoutId) {
+        clearTimeout(timeoutId); // 既存のタイマーをクリア
+    }
+    checkMouseStop();
+}
+
+setInterval(mouseMove,10);
+
+// イベントリスナーを追加する
+document.addEventListener("mousemove", mouseMove);
+
+      function draw() {
+        canvas.addEventListener('mousemove',function(e){
+        x=e.clientX;
+        y=e.clientY;
+        ctx.beginPath();
+        ctx.arc(x, y,  20, 0, Math.PI * 2, false);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.closePath();
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        })
+      }
+      function drawenemy(){
+        enemy.clearRect(0,0, canvas.width, canvas.height);
+        enemy.beginPath();
+        enemy.arc(xe, ye, 10, 0, Math.PI *2, false);
+        enemy.fillStyle = "green";
+        enemy.fill();
+        enemy.closePath();
+        
+        if (xe + dxe > canvas.width || xe + dxe < 0) {
+          dxe = -dxe;
+        }
+        if (ye + dye > canvas.height || ye + dye < 0) {
+          dye = -dye;
+        }
+        xe+=dxe;
+        ye+=dye;
+
+        new1.beginPath();
+        new1.arc(x1, y1, 10, 0, Math.PI *2, false);
+        new1.fillStyle = "red";
+        new1.fill();
+        new1.closePath();
+        
+        if (x1 + dx1 > canvas.width || x1 + dx1 < 0) {
+          dx1 = -dx1;
+        }
+        if (y1 + dy1 > canvas.height || y1 + dy1 < 0) {
+          dy1 = -dy1;
+        }
+        x1+=dx1;
+        y1+=dy1;
+
+        new2.beginPath();
+        new2.arc(x2, y2, 10, 0, Math.PI *2, false);
+        new2.fillStyle = "brown";
+        new2.fill();
+        new2.closePath();
+        
+        if (x2 + dx2 > canvas.width || x2 + dx2 < 0) {
+          dx2 = -dx2;
+        }
+        if (y2 + dy2 > canvas.height || y2 + dy2 < 0) {
+          dy2 = -dy2;
+        }
+        x2+=dx2;
+        y2+=dy2;
+
+        new3.beginPath();
+        new3.arc(x3, y3, 20, 0, Math.PI *2, false);
+        new3.fillStyle = "orange";
+        new3.fill();
+        new3.closePath();
+        
+        if (x3 + dx3 > canvas.width || x3 + dx3 < 0) {
+          dx3 = -dx3;
+        }
+        if (y3 + dy3 > canvas.height || y3 + dy3 < 0) {
+          dy3 = -dy3;
+        }
+        x3+=dx3;
+        y3+=dy3;
+        
+        new4.beginPath();
+        new4.arc(x4, y4, 20, 0, Math.PI *2, false);
+        new4.fillStyle = "pink";
+        new4.fill();
+        new4.closePath();
+        
+        if (x4 + dx4 > canvas.width || x4 + dx4 < 0) {
+          dx4 = -dx4;
+        }
+        if (y4 + dy4 > canvas.height || y4 + dy4 < 0) {
+          dy4 = -dy4;
+        }
+        x4+=dx4;
+        y4+=dy4;
+      }
+
+      //ボールが当たったか否かを判定する関数
+      function hit(){
+        if((x-xe)*(x-xe)+(y-ye)*(y-ye)<=900||(x-x1)*(x-x1)+(y-y1)*(y-y1)<=900||(x-x2)*(x-x2)+(y-y2)*(y-y2)<=900||(x-x3)*(x-x3)+(y-y3)*(y-y3)<=1600||(x-x4)*(x-x4)+(y-y4)*(y-y4)<=1600){
+           endTime = new Date();
+          alert(Math.floor((endTime-startTime)/1000));
+          clearInterval(interval);
+        }
+      }
+
+      const interval =setInterval(hit, 10);
+      setInterval(draw,0.1);
+      setInterval(drawenemy,1);
+
+      /*input();
+
+      //キー入力関数の定義
+      function input(){
+        document.addEventListener('keydown', function(event) {
+          if (event.key === 'ArrowRight') {
+            //右
+            x+=dx;
+          }else if (event.key === 'ArrowLeft') {
+            //左
+            x-=dx;
+          }else if (event.key === 'ArrowUp') {
+            //上
+            y+=dy;
+          }else if (event.key === 'ArrowDown') {
+            //下
+            y-=dy;
+          }else{
+
+          }
+        });
+      }
+      */
+    </script>
+  </body>
+</html>
